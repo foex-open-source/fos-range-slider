@@ -33,7 +33,8 @@ FOS.item.rangeSlider = FOS.item.rangeSlider || {};
  * @param {function}    [initFn]                       Javascript initialization function which allows you to override any settings before the slider is created
  */
 
-FOS.item.rangeSlider.init = function(config, initJs) {
+FOS.item.rangeSlider.init = function (config, initJs) {
+
     // default values for the attributes that can be changed only through initJs
     config.keyboardSupport = true;
     config.direction = 'ltr';
@@ -54,8 +55,11 @@ FOS.item.rangeSlider.init = function(config, initJs) {
     let handleCount = config.handles;
     const isNumberType = type == 'number';
     const dateFormat = isNumberType ? null : config.dateFormat;
+    const displayFormat = isNumberType ? null : config.displayFormat;
+    const useDisplayFormat = isNumberType ? false : config.useDisplayFormat;
     let numberFormatCfg = isNumberType ? getNumberFormatCfg() : null;
-    let format = isNumberType ? wNumb(numberFormatCfg) : { to: formatDate, from: convertToTimestamp };
+    let chosenDateFormat = useDisplayFormat ? { to: formatDisplayDate, from: convertToTimestamp } : { to: formatDate, from: convertToTimestamp };
+    let format = isNumberType ? wNumb(numberFormatCfg) : chosenDateFormat;
     let minValue = isNumberType ? parseFloat(config.minimumValue) : config.minimumValue;
     let maxValue = isNumberType ? parseFloat(config.maximumValue) : config.maximumValue;
     let minValueNum = isNumberType ? minValue : convertToTimestamp(config.minimumValue);
@@ -355,15 +359,32 @@ FOS.item.rangeSlider.init = function(config, initJs) {
     }
 
     /**
+     * Formats the date according to the display format override
+     *
+     * @param {date} date - The date to be formatted.
+     * @returns {string} Formatted date-string.
+     */
+    function formatDisplayDate(date) {
+        return moment(date).format(displayFormat);
+    }
+
+    /**
      * Parses a string to a native Date.
      *
      * @param {string} str - The string to be parsed.
      * @returns {date} Native Date instance.
      */
     function parseDate(str) {
-        // check whether the str is in ISO format; if it is not, we have to parse it with the dateformat
-        let iso = moment.utc(str, moment.ISO_8601);
-        return iso.isValid() ? new Date(iso) : moment.utc(str, dateFormat).toDate();
+        var parsedDate;
+        function checkParseSuccess(str, dateFormat) {
+            parsedDate = moment(str, dateFormat);
+            return parsedDate.isValid();
+        }
+        if (checkParseSuccess(str, moment.ISO_8601) || checkParseSuccess(str, dateFormat) || checkParseSuccess(str, displayFormat)) {
+            return parsedDate.toDate();
+        }
+        apex.debug.error('Range Slider Error: Cannot parse date!!');
+        return parsedDate.toDate();
     }
 
     /**

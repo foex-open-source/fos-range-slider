@@ -129,6 +129,9 @@ as
     l_date_sep_arr apex_t_varchar2 := apex_t_varchar2('-',',','.',';',':',' ','/');
     l_result       varchar2(400);
 begin
+    if p_oracle_format is null then
+        return null;
+    end if;
     l_date_parts := split_string_into_words
                       ( p_string       => p_oracle_format
                       , p_word_sep_arr => l_date_sep_arr
@@ -167,14 +170,16 @@ as
     l_number_steps         p_item.attribute_08%type   := p_item.attribute_08;
     l_orientation          p_item.attribute_09%type   := p_item.attribute_09;
     l_options              p_item.attribute_10%type   := p_item.attribute_10;
-    l_enable_tooltips      boolean                    := instr(l_options, 'enable-tooltip'    ) > 0;
-    l_enable_ticks         boolean                    := instr(l_options, 'enable-ticks'      ) > 0;
-    l_return_value_item    boolean                    := instr(l_options, 'bind-value-to-item') > 0;
-    l_connect_bar          boolean                    := instr(l_options, 'connects-bar'      ) > 0;
-    l_flip_range           boolean                    := instr(l_options, 'flip-range'        ) > 0;
+    l_enable_tooltips      boolean                    := instr(l_options, 'enable-tooltip'            ) > 0;
+    l_enable_ticks         boolean                    := instr(l_options, 'enable-ticks'              ) > 0;
+    l_return_value_item    boolean                    := instr(l_options, 'bind-value-to-item'        ) > 0;
+    l_connect_bar          boolean                    := instr(l_options, 'connects-bar'              ) > 0;
+    l_flip_range           boolean                    := instr(l_options, 'flip-range'                ) > 0;
+    l_use_display_fmt      boolean                    := instr(l_options, 'custom-display-format-mask') > 0;
     l_ticks_num            p_item.attribute_11%type   := p_item.attribute_11;
     l_return_item          p_item.attribute_12%type   := p_item.attribute_12;
     l_range_color          p_item.attribute_13%type   := p_item.attribute_13;
+    l_custom_display_fmt   p_item.attribute_13%type   := oracle_to_js_date_format(p_item.attribute_14);
     -- local variables
     l_step                 varchar2(100);
     l_min_value            varchar2(1000);
@@ -183,7 +188,7 @@ as
     l_js_date_format       varchar2(1000);
 begin
     -- standard debugging
-    if apex_application.g_debug
+    if apex_application.g_debug and substr(:DEBUG,6) >= 6
     then
         apex_plugin_util.debug_page_item
           ( p_plugin    => p_plugin
@@ -251,6 +256,10 @@ begin
     apex_json.write('retItems'              , l_return_item                     );
     apex_json.write('connectBar'            , l_connect_bar                     );
     apex_json.write('flipRange'             , l_flip_range                      );
+    apex_json.write('useDisplayFormat'      , l_use_display_fmt                 );
+    if l_use_display_fmt then
+        apex_json.write('displayFormat'     , l_custom_display_fmt              );
+    end if;
     apex_json.write('itemName'              , l_item_name                       );
     apex_json.write('dateFormat'            , l_js_date_format                  );
     apex_json.open_object('numberFormat');
@@ -264,7 +273,11 @@ begin
         then
             apex_json.write(l_item_value_arr(i));
         else
-            apex_json.write(to_date(l_item_value_arr(i),l_date_format));
+            if l_use_display_fmt then
+                apex_json.write(l_item_value_arr(i));
+            else
+                apex_json.write(to_date(l_item_value_arr(i),l_date_format));
+            end if;
         end if;
     end loop;
 

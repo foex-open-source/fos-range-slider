@@ -1,6 +1,6 @@
 {
     "name":"FOS - Range Slider"
-   ,"version":"21.1.0"
+   ,"version":"21.2.0"
    ,"description":"A feature rich range slider page item. Perfect for range based report or chart filtering.\r\n\u003Ch4\u003EFree Plug-in under MIT License\u003C\/h4\u003E\r\n\u003Cp\u003E\r\nAll FOS plug-ins are released under MIT License, which essentially means it is free for everyone to use, no matter if commercial or private use. \r\n\u003C\/p\u003E\r\n\u003Ch4\u003EOverview\u003C\/h4\u003E\r\n\u003Cp\u003EThe \u003Cstrong\u003EFOS - Range Slider\u003C\/strong\u003E item plug-in is a lightweight range slider with multi-touch support and is packed with features. It supports numeric and date ranges, non-linear ranges, has keyboard support, and it works great in responsive designs. You can:\u003C\/p\u003E\r\n\u003Cul\u003E\r\n\u003Cli\u003EUse it vertically or horizontally\u003C\/li\u003E\r\n\u003Cli\u003EUse either a single or multiple value range\u003C\/li\u003E\r\n\u003Cli\u003ERestrict the minimum\/maximum range values\u003C\/li\u003E\r\n\u003Cli\u003ESet page items with the range values\u003C\/li\u003E\r\n\u003Cli\u003EControl the range colour\u003C\/li\u003E\r\n\u003Cli\u003EControl the step size\u003C\/li\u003E\r\n\u003C\/ul\u003E\r\n\u003Cp\u003EIt\u0027s the perfect page item filter for your reports and charts.\u003C\/p\u003E\r\n\u003Cp\u003EThis item plug-in integrates the \u003Cstrong\u003EnoUISlider\u003C\/strong\u003E JavaScript Range Slider (https:\/\/refreshless.com\/nouislider\/).\u003C\/p\u003E"
    ,"keywords":[
         "item"
@@ -31,12 +31,15 @@
            ,"12.2.0.1"
            ,"18.0.0.0"
            ,"19.0.0.0"
+           ,"21.0.0.0"
         ]
        ,"apex":{
             "versions":[
                 "19.2.0"
                ,"20.1.0"
                ,"20.2.0"
+               ,"21.1.0"
+               ,"21.2.0"
             ]
            ,"plugin":{
                 "internalName":"COM.FOS.RANGE_SLIDER"
