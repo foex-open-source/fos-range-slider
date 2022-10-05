@@ -450,7 +450,7 @@ wwv_flow_api.create_plugin(
 '</ul>',
 '<p>It''s the perfect page item filter for your reports and charts.</p>',
 '<p>This item plug-in integrates the <strong>noUISlider</strong> JavaScript Range Slider (https://refreshless.com/nouislider/).</p>'))
-,p_version_identifier=>'21.2.0'
+,p_version_identifier=>'22.1.0'
 ,p_about_url=>'https://fos.world'
 ,p_plugin_comment=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '// Settings for the FOS browser extension',
